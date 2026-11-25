@@ -1,0 +1,8 @@
+# Copy this file to SanDen/local.properties (never commit local.properties)
+sdk.dir=C\:\\Users\\YOUR_NAME\\AppData\\Local\\Android\\Sdk
+
+# Optional: Release APK signing (leave unset for unsigned/debug builds)
+# sanden.release.storeFile=sanden-release.jks
+# sanden.release.storePassword=YOUR_STORE_PASSWORD
+# sanden.release.keyAlias=sanden
+# sanden.release.keyPassword=YOUR_KEY_PASSWORD

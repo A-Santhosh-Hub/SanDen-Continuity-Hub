@@ -1,0 +1,210 @@
+<Application x:Class="SanDen.Desktop.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!-- Signature Crimson-Obsidian Palette -->
+        <Color x:Key="ObsidianWindowColor">#08090E</Color>
+        <Color x:Key="ObsidianSidebarColor">#0B0D14</Color>
+        <Color x:Key="ObsidianPanelColor">#10131C</Color>
+        <Color x:Key="ObsidianCardColor">#151925</Color>
+        <Color x:Key="ObsidianCardHoverColor">#1C2232</Color>
+        <Color x:Key="ObsidianInputColor">#161A26</Color>
+        <Color x:Key="BrandRedColor">#EF4444</Color>
+        <Color x:Key="BrandRedDeepColor">#DC2626</Color>
+        <Color x:Key="BrandGreenColor">#22C55E</Color>
+
+        <SolidColorBrush x:Key="ObsidianWindowBrush" Color="{StaticResource ObsidianWindowColor}" />
+        <SolidColorBrush x:Key="ObsidianSidebarBrush" Color="{StaticResource ObsidianSidebarColor}" />
+        <SolidColorBrush x:Key="ObsidianPanelBrush" Color="{StaticResource ObsidianPanelColor}" />
+        <SolidColorBrush x:Key="ObsidianCardBrush" Color="{StaticResource ObsidianCardColor}" />
+        <SolidColorBrush x:Key="ObsidianCardHoverBrush" Color="{StaticResource ObsidianCardHoverColor}" />
+        <SolidColorBrush x:Key="ObsidianInputBrush" Color="{StaticResource ObsidianInputColor}" />
+        <SolidColorBrush x:Key="GlassBorderBrush" Color="#1FFFFFFF" />
+        <SolidColorBrush x:Key="SubtleDividerBrush" Color="#14FFFFFF" />
+        <SolidColorBrush x:Key="BrandRedBrush" Color="{StaticResource BrandRedColor}" />
+        <SolidColorBrush x:Key="BrandRedDeepBrush" Color="{StaticResource BrandRedDeepColor}" />
+        <SolidColorBrush x:Key="BrandGreenBrush" Color="{StaticResource BrandGreenColor}" />
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F8FAFC" />
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#94A3B8" />
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#64748B" />
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Sleek Minimal Dark ScrollBar -->
+        <Style x:Key="SlimThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="ThumbBd" Background="#2EFFFFFF" CornerRadius="3" Margin="1" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ThumbBd" Property="Background" Value="#55EF4444" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+            <Setter Property="Width" Value="7" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid Background="Transparent" Width="7">
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource SlimThumbStyle}" />
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Width" Value="Auto" />
+                    <Setter Property="Height" Value="7" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid Background="Transparent" Height="7">
+                                    <Track x:Name="PART_Track" IsDirectionReversed="False">
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource SlimThumbStyle}" />
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Clean Borderless Icon / Action Button -->
+        <Style x:Key="GhostButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#18FFFFFF" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#26EF4444" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Left Navigation Rail Item Style (Supports Uid='Active' Crimson Glow Pill) -->
+        <Style x:Key="NavRailButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#CBD5E1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="NavBd"
+                                CornerRadius="10"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavBd" Property="Background" Value="#16FFFFFF" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="Uid" Value="Active">
+                                <Setter TargetName="NavBd" Property="BorderBrush" Value="#88EF4444" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter TargetName="NavBd" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#4ADC2626" Offset="0" />
+                                            <GradientStop Color="#16DC2626" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TitleBar Window Control Button -->
+        <Style x:Key="WindowControlButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="42" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#94A3B8" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="WindowCloseButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowControlButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#DC2626" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>

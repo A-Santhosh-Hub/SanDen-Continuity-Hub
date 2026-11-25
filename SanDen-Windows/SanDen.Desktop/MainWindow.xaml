@@ -1,0 +1,1646 @@
+<Window x:Class="SanDen.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:SanDen.Desktop.Models"
+        Title="SanDen — Continuity Hub by SanStudio"
+        Width="1320" Height="820"
+        MinWidth="1020" MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource ObsidianWindowBrush}"
+        Foreground="{StaticResource TextPrimaryBrush}"
+        FontFamily="Segoe UI"
+        AllowDrop="True"
+        Drop="Window_Drop"
+        DragOver="Window_DragOver"
+        PreviewKeyDown="Window_PreviewKeyDown"
+        Icon="pack://application:,,,/Assets/favicon.ico">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="34"
+                      CornerRadius="12"
+                      GlassFrameThickness="0"
+                      NonClientFrameEdges="None"
+                      ResizeBorderThickness="6"
+                      UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Border BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="10" ClipToBounds="True" Background="#08090E">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- ═══ AMBIENT CRIMSON AURORA SILK RIBBONS (Top & Bottom-Left) ═══ -->
+            <Canvas Grid.RowSpan="2" IsHitTestVisible="False" ClipToBounds="True">
+                <!-- Top Center-Left Crimson Glow -->
+                <Ellipse Width="640" Height="220" Canvas.Left="280" Canvas.Top="-95" Opacity="0.28">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#EF4444" Offset="0" />
+                            <GradientStop Color="#88991B1B" Offset="0.45" />
+                            <GradientStop Color="#0008090E" Offset="1" />
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <!-- Top Silk Wave Ribbons -->
+                <Path Data="M 210,95 C 360,25 460,115 620,18 C 720,-35 810,55 940,-10"
+                      StrokeThickness="2.2" Opacity="0.42">
+                    <Path.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#00EF4444" Offset="0" />
+                            <GradientStop Color="#EF4444" Offset="0.45" />
+                            <GradientStop Color="#DC2626" Offset="0.7" />
+                            <GradientStop Color="#00DC2626" Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                </Path>
+                <Path Data="M 240,112 C 400,45 500,120 655,34 C 755,-15 835,60 970,5"
+                      StrokeThickness="1.2" Opacity="0.26">
+                    <Path.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#00F87171" Offset="0" />
+                            <GradientStop Color="#F87171" Offset="0.5" />
+                            <GradientStop Color="#00EF4444" Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                </Path>
+
+                <!-- Bottom-Left Sidebar Crimson Silk Waves -->
+                <Ellipse Width="280" Height="180" Canvas.Left="-40" Canvas.Top="660" Opacity="0.32">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#DC2626" Offset="0" />
+                            <GradientStop Color="#0008090E" Offset="1" />
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Path Data="M -10,740 C 55,690 125,775 215,710"
+                      Stroke="#77EF4444" StrokeThickness="2" />
+                <Path Data="M -10,762 C 65,715 135,790 220,732"
+                      Stroke="#44F87171" StrokeThickness="1.2" />
+            </Canvas>
+
+            <!-- ═══ ROW 0: CUSTOM DARK WINDOW TITLE BAR ═══ -->
+            <Grid Grid.Row="0" Background="#06070B">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <Border Width="18" Height="18" CornerRadius="4" Background="#DC2626" Margin="0,0,8,0">
+                        <Path Data="M6,1 L11,3 L11,6.5 C11,9.5 8.8,11.8 6,12.6 C3.2,11.8 1,9.5 1,6.5 L1,3 Z"
+                              Fill="White" Stretch="Uniform" Width="10" Height="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="SanDen — Continuity Hub by SanStudio"
+                               FontSize="11.5"
+                               Foreground="#94A3B8"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Style="{StaticResource WindowControlButtonStyle}" Click="MinimizeWindow_Click" ToolTip="Minimize">
+                        <Path Data="M0,0 L10,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.2" />
+                    </Button>
+                    <Button Style="{StaticResource WindowControlButtonStyle}" Click="MaximizeWindow_Click" ToolTip="Maximize / Restore">
+                        <Rectangle Width="9" Height="9" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.2" />
+                    </Button>
+                    <Button Style="{StaticResource WindowCloseButtonStyle}" Click="CloseWindow_Click" ToolTip="Close">
+                        <Path Data="M0,0 L9,9 M9,0 L0,9" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.3" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- ═══ ROW 1: MAIN APPLICATION SHELL ═══ -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="208" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ─── LEFT NAVIGATION RAIL ─── -->
+                <Border Grid.Column="0" Background="#B80B0D14" BorderBrush="#18FFFFFF" BorderThickness="0,0,1,0" ClipToBounds="True">
+                    <Grid>
+                        <!-- Bottom-Left Crimson Silk Ribbon Glow -->
+                        <Canvas IsHitTestVisible="False" VerticalAlignment="Bottom" Height="160">
+                            <Ellipse Width="250" Height="140" Canvas.Left="-35" Canvas.Top="45" Opacity="0.38">
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush>
+                                        <GradientStop Color="#EF4444" Offset="0" />
+                                        <GradientStop Color="#55991B1B" Offset="0.55" />
+                                        <GradientStop Color="#000B0D14" Offset="1" />
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Path Data="M -12,118 C 48,74 122,148 216,86" Stroke="#AAEF4444" StrokeThickness="2" />
+                            <Path Data="M -12,136 C 58,92 132,158 218,106" Stroke="#66F87171" StrokeThickness="1.2" />
+                        </Canvas>
+
+                    <Grid Margin="14,16,14,12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Brand Shield Logo + SanDen Title -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4,2,0,22">
+                            <Grid Width="42" Height="44" Margin="0,0,12,0">
+                                <Path Data="M21,2 L38,8.5 L38,21 C38,31.5 30.6,39.5 21,42.5 C11.4,39.5 4,31.5 4,21 L4,8.5 Z"
+                                      Stroke="#EF4444" StrokeThickness="2" Fill="#24DC2626">
+                                    <Path.Effect>
+                                        <DropShadowEffect Color="#EF4444" BlurRadius="14" ShadowDepth="0" Opacity="0.55" />
+                                    </Path.Effect>
+                                </Path>
+                                <Path Data="M17,19 L17,16 C17,13.8 18.8,12 21,12 C23.2,12 25,13.8 25,16 L25,19 M15,19 L27,19 C28.1,19 29,19.9 29,21 L29,28 C29,29.1 28.1,30 27,30 L15,30 C13.9,30 13,29.1 13,28 L13,21 C13,19.9 13.9,19 15,19 Z"
+                                      Stroke="#EF4444" StrokeThickness="1.8" Fill="Transparent" />
+                            </Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock FontSize="22" FontWeight="Bold" LineHeight="24">
+                                    <Run Text="San" Foreground="#FFFFFF" /><Run Text="Den" Foreground="#EF4444" />
+                                </TextBlock>
+                                <TextBlock Text="Continuity Hub" FontSize="11.5" Foreground="#94A3B8" Margin="0,1,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- 7 Navigation Items -->
+                        <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                            <Button x:Name="NavChatBtn" Tag="Chat" Uid="Active" Click="NavTab_Click" Style="{StaticResource NavRailButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M4,4 L20,4 C21.1,4 22,4.9 22,6 L22,16 C22,17.1 21.1,18 20,18 L8,18 L4,22 L4,6 C4,4.9 4.9,4 6,4"
+                                          Stroke="#F8FAFC" StrokeThickness="1.7" Width="17" Height="17" Stretch="Uniform" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="NavChatLbl" Text="Chat" FontSize="13.5" FontWeight="SemiBold" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavVaultBtn" Tag="Vault" Click="NavTab_Click" Style="{StaticResource NavRailButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M3,6 C3,4.9 3.9,4 5,4 L10,4 L12,6 L19,6 C20.1,6 21,6.9 21,8 L21,18 C21,19.1 20.1,20 19,20 L5,20 C3.9,20 3,19.1 3,18 Z"
+                                          Stroke="#94A3B8" StrokeThickness="1.7" Width="17" Height="17" Stretch="Uniform" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="NavVaultLbl" Text="Vault" FontSize="13.5" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavTransferBtn" Tag="Transfer" Click="NavTab_Click" Style="{StaticResource NavRailButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M7,16 L7,4 M7,4 L3,8 M7,4 L11,8 M17,8 L17,20 M17,20 L13,16 M17,20 L21,16"
+                                          Stroke="#94A3B8" StrokeThickness="1.7" Width="17" Height="17" Stretch="Uniform" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="NavTransferLbl" Text="Transfer" FontSize="13.5" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavClipboardBtn" Tag="Clipboard" Click="NavTab_Click" Style="{StaticResource NavRailButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M9,4 L15,4 C15.6,4 16,4.4 16,5 L16,6 L8,6 L8,5 C8,4.4 8.4,4 9,4 Z M6,6 L8,6 L8,7 L16,7 L16,6 L18,6 C19.1,6 20,6.9 20,8 L20,20 C20,21.1 19.1,22 18,22 L6,22 C4.9,22 4,21.1 4,20 L4,8 C4,6.9 4.9,6 6,6 Z"
+                                          Stroke="#94A3B8" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="NavClipboardLbl" Text="Clipboard" FontSize="13.5" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavDevicesBtn" Tag="Devices" Click="NavTab_Click" Style="{StaticResource NavRailButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M3,4 L21,4 C21.6,4 22,4.4 22,5 L22,15 C22,15.6 21.6,16 21,16 L3,16 C2.4,16 2,15.6 2,15 L2,5 C2,4.4 2.4,4 3,4 Z M8,20 L16,20 M12,16 L12,20"
+                                          Stroke="#94A3B8" StrokeThickness="1.7" Width="17" Height="17" Stretch="Uniform" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="NavDevicesLbl" Text="Devices" FontSize="13.5" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavProjectsBtn" Tag="Projects" Click="NavTab_Click" Style="{StaticResource NavRailButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,2 L2,7 L12,12 L22,7 Z M2,12 L12,17 L22,12 M2,17 L12,22 L22,17"
+                                          Stroke="#94A3B8" StrokeThickness="1.7" Width="17" Height="17" Stretch="Uniform" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="NavProjectsLbl" Text="Projects" FontSize="13.5" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavBranchesBtn" Tag="Branches" Click="NavTab_Click" Style="{StaticResource NavRailButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M6,3 L6,15 M18,9 C18,12.3 15.3,15 12,15 L6,15 M6,3 C4.9,3 4,3.9 4,5 C4,6.1 4.9,7 6,7 C7.1,7 8,6.1 8,5 C8,3.9 7.1,3 6,3 Z M18,5 C16.9,5 16,5.9 16,7 C16,8.1 16.9,9 18,9 C19.1,9 20,8.1 20,7 C20,5.9 19.1,5 18,5 Z M6,17 C4.9,17 4,17.9 4,19 C4,20.1 4.9,21 6,21 C7.1,21 8,20.1 8,19 C8,17.9 7.1,17 6,17 Z"
+                                          Stroke="#94A3B8" StrokeThickness="1.7" Width="17" Height="17" Stretch="Uniform" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="NavBranchesLbl" Text="Branches" FontSize="13.5" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Bottom Phone Vault Storage Card -->
+                        <Border Grid.Row="2" Background="#D8121520" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="12" Padding="12,11" Margin="0,12,0,14" Cursor="Hand" MouseLeftButtonUp="OpenPhoneVaultTab_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Width="30" Height="36" CornerRadius="7" Background="#1B2030" Margin="0,0,10,0" VerticalAlignment="Center">
+                                    <Path Data="M7,2 L17,2 C18.1,2 19,2.9 19,4 L19,20 C19,21.1 18.1,22 17,22 L7,22 C5.9,22 5,21.1 5,20 L5,4 C5,2.9 5.9,2 7,2 Z M11,19 L13,19"
+                                          Stroke="#CBD5E1" StrokeThickness="1.6" Width="15" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Phone Vault" FontSize="12" FontWeight="SemiBold" Foreground="#F1F5F9" />
+                                    <TextBlock x:Name="SidebarVaultStatText" Text="0 B / --" FontSize="11" Foreground="#94A3B8" Margin="0,2,0,6" />
+                                    <Border Height="5" CornerRadius="2.5" Background="#232838">
+                                        <Border x:Name="SidebarVaultBarFill" HorizontalAlignment="Left" Width="28" Height="5" CornerRadius="2.5" Background="#EF4444" />
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Footer: v2.0 by SanStudio -->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="2,4,0,0">
+                            <Border Background="#1B1F2E" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="8" Padding="8,2" Margin="0,0,10,0">
+                                <TextBlock Text="v2.0" FontSize="10.5" FontWeight="SemiBold" Foreground="#CBD5E1" />
+                            </Border>
+                            <TextBlock Text="by SanStudio" FontSize="11.5" Foreground="#94A3B8" Cursor="Hand" VerticalAlignment="Center" MouseLeftButtonUp="SanStudioFooter_Click" />
+                        </StackPanel>
+                    </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- ─── MAIN RIGHT WORKSPACE (TOP HEADER + CONTENT + RIGHT TELEMETRY) ─── -->
+                <Grid Grid.Column="1" Margin="18,10,18,14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="64" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- TOP WORKSPACE HEADER -->
+                    <Grid Grid.Row="0" Margin="2,0,2,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Continuity Hub" FontSize="23" FontWeight="Bold" Foreground="#FFFFFF" />
+                            <TextBlock Text="Real-time chat, files, and clipboard across your devices" FontSize="12.5" Foreground="#94A3B8" Margin="0,2,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <!-- Search Pill -->
+                            <Border Width="330" Height="38" Background="#121520" BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="19" Padding="14,0,8,0" Margin="0,0,12,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Path Data="M11,4 C14.9,4 18,7.1 18,11 C18,14.9 14.9,18 11,18 C7.1,18 4,14.9 4,11 C4,7.1 7.1,4 11,4 Z M16.5,16.5 L21,21"
+                                          Stroke="#94A3B8" StrokeThickness="1.7" Width="15" Height="15" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,9,0" />
+                                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock x:Name="SearchPlaceholder" Text="Search messages, files, or projects..." FontSize="12.5" Foreground="#64748B" IsHitTestVisible="False" />
+                                        <TextBox x:Name="GlobalSearchBox"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Foreground="#F8FAFC"
+                                                 CaretBrush="#EF4444"
+                                                 FontSize="12.5"
+                                                 TextChanged="GlobalSearchBox_TextChanged" />
+                                    </Grid>
+                                    <Border Grid.Column="2" Background="#1E2333" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="9" Padding="8,3" VerticalAlignment="Center">
+                                        <TextBlock Text="Ctrl + K" FontSize="10.5" Foreground="#94A3B8" FontWeight="SemiBold" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- Notification Bell -->
+                            <Button Style="{StaticResource GhostButtonStyle}" Width="38" Height="38" Margin="0,0,6,0" Click="BellNotification_Click" ToolTip="Recent Sync Status">
+                                <Grid Width="20" Height="20">
+                                    <Path Data="M18,8 C18,4.7 15.3,2 12,2 C8.7,2 6,4.7 6,8 C6,15 3,17 3,17 L21,17 C21,17 18,15 18,8 Z M13.7,21 C13.4,21.6 12.7,22 12,22 C11.3,22 10.6,21.6 10.3,21"
+                                          Stroke="#CBD5E1" StrokeThickness="1.7" Stretch="Uniform" />
+                                    <Ellipse x:Name="NotificationDot" Width="7" Height="7" Fill="#EF4444" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,1,0" />
+                                </Grid>
+                            </Button>
+
+                            <!-- Settings Gear -->
+                            <Button Style="{StaticResource GhostButtonStyle}" Width="38" Height="38" Click="OpenDevicesSettings_Click" ToolTip="Connection &amp; Hub Settings">
+                                <Path Data="M12,15 C13.7,15 15,13.7 15,12 C15,10.3 13.7,9 12,9 C10.3,9 9,10.3 9,12 C9,13.7 10.3,15 12,15 Z M19.4,15 C19.2,15.5 19.3,16.1 19.7,16.5 L19.8,16.6 C20.5,17.3 20.5,18.5 19.8,19.2 C19.1,19.9 17.9,19.9 17.2,19.2 L17.1,19.1 C16.7,18.7 16.1,18.6 15.6,18.8 C15.1,19 14.8,19.5 14.8,20.1 L14.8,20.3 C14.8,21.3 14,22.1 13,22.1 L11,22.1 C10,22.1 9.2,21.3 9.2,20.3 L9.2,20.1 C9.2,19.5 8.9,19 8.4,18.8 C7.9,18.6 7.3,18.7 6.9,19.1 L6.8,19.2 C6.1,19.9 4.9,19.9 4.2,19.2 C3.5,18.5 3.5,17.3 4.2,16.6 L4.3,16.5 C4.7,16.1 4.8,15.5 4.6,15 C4.4,14.5 3.9,14.2 3.3,14.2 L3.1,14.2 C2.1,14.2 1.3,13.4 1.3,12.4 L1.3,10.4 C1.3,9.4 2.1,8.6 3.1,8.6 L3.3,8.6 C3.9,8.6 4.4,8.3 4.6,7.8 C4.8,7.3 4.7,6.7 4.3,6.3 L4.2,6.2 C3.5,5.5 3.5,4.3 4.2,3.6 C4.9,2.9 6.1,2.9 6.8,3.6 L6.9,3.7 C7.3,4.1 7.9,4.2 8.4,4 C8.9,3.8 9.2,3.3 9.2,2.7 L9.2,2.5 C9.2,1.5 10,0.7 11,0.7 L13,0.7 C14,0.7 14.8,1.5 14.8,2.5 L14.8,2.7 C14.8,3.3 15.1,3.8 15.6,4 C16.1,4.2 16.7,4.1 17.1,3.7 L17.2,3.6 C17.9,2.9 19.1,2.9 19.8,3.6 C20.5,4.3 20.5,5.5 19.8,6.2 L19.7,6.3 C19.3,6.7 19.2,7.3 19.4,7.8 C19.6,8.3 20.1,8.6 20.7,8.6 L20.9,8.6 C21.9,8.6 22.7,9.4 22.7,10.4 L22.7,12.4 C22.7,13.4 21.9,14.2 20.9,14.2 L20.7,14.2 C20.1,14.2 19.6,14.5 19.4,15 Z"
+                                      Stroke="#CBD5E1" StrokeThickness="1.6" Width="18" Height="18" Stretch="Uniform" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- MAIN BODY: CENTER WORKSPACE CARD + RIGHT TELEMETRY SIDEBAR -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="14" />
+                            <ColumnDefinition Width="268" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- ═══ LEFT/CENTER UNIFIED WORKSPACE CONTAINER ═══ -->
+                        <Border Grid.Column="0" Background="#D90F121B" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="16" ClipToBounds="True">
+                            <Grid>
+                                <!-- 1) CHAT + PROJECTS + BRANCHES WORKSPACE VIEW (Default) -->
+                                <Grid x:Name="ChatWorkspaceView" Visibility="Visible">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="196" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Inner Projects & Branches Column -->
+                                    <Border Grid.Column="0" Background="#0C0F17" BorderBrush="#18FFFFFF" BorderThickness="0,0,1,0" Padding="12,14">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <StackPanel>
+                                                <!-- Projects Header -->
+                                                <Grid Margin="2,0,2,8">
+                                                    <TextBlock Text="Projects" FontSize="13" FontWeight="SemiBold" Foreground="#F1F5F9" VerticalAlignment="Center" />
+                                                    <Button Style="{StaticResource GhostButtonStyle}" Width="24" Height="24" HorizontalAlignment="Right" Click="NewProjectBtn_Click" ToolTip="Create New Project Channel">
+                                                        <Border Width="22" Height="22" CornerRadius="11" Background="#1A1F2E" BorderBrush="#28FFFFFF" BorderThickness="1">
+                                                            <Path Data="M6,2 L6,10 M2,6 L10,6" Stroke="#CBD5E1" StrokeThickness="1.5" Width="10" Height="10" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                    </Button>
+                                                </Grid>
+
+                                                <ItemsControl x:Name="ProjectsListControl">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type models:ProjectItem}">
+                                                            <Button Tag="{Binding Name}" Click="ProjectItem_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,0,0,4">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border x:Name="ProjBd" CornerRadius="8" Padding="10,8" Background="Transparent" BorderThickness="1" BorderBrush="Transparent">
+                                                                            <StackPanel Orientation="Horizontal">
+                                                                                <Path x:Name="ProjIcon" Data="M4,4 L20,4 L20,16 L8,16 L4,20 Z" Stroke="#94A3B8" StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform" Margin="0,0,9,0" />
+                                                                                <TextBlock x:Name="ProjTxt" Text="{Binding Name}" FontSize="12.5" Foreground="#CBD5E1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="130" />
+                                                                            </StackPanel>
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                                                <Setter TargetName="ProjBd" Property="Background" Value="#3B131A" />
+                                                                                <Setter TargetName="ProjBd" Property="BorderBrush" Value="#88EF4444" />
+                                                                                <Setter TargetName="ProjTxt" Property="Foreground" Value="#FFFFFF" />
+                                                                                <Setter TargetName="ProjTxt" Property="FontWeight" Value="SemiBold" />
+                                                                                <Setter TargetName="ProjIcon" Property="Stroke" Value="#F87171" />
+                                                                            </DataTrigger>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter TargetName="ProjBd" Property="Background" Value="#1E2334" />
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                            </Button>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                                <Button Style="{StaticResource GhostButtonStyle}" HorizontalContentAlignment="Left" Padding="10,8" Margin="0,2,0,14" Click="NewProjectBtn_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Path Data="M6,1 L6,11 M1,6 L11,6" Stroke="#94A3B8" StrokeThickness="1.6" Width="12" Height="12" Stretch="Uniform" Margin="0,0,9,0" />
+                                                        <TextBlock Text="New Project" FontSize="12" Foreground="#94A3B8" />
+                                                    </StackPanel>
+                                                </Button>
+
+                                                <Border Height="1" Background="#16FFFFFF" Margin="2,0,2,14" />
+
+                                                <!-- Branches Header -->
+                                                <Grid Margin="2,0,2,8">
+                                                    <TextBlock Text="Branches" FontSize="13" FontWeight="SemiBold" Foreground="#F1F5F9" VerticalAlignment="Center" />
+                                                    <Button Style="{StaticResource GhostButtonStyle}" Width="24" Height="24" HorizontalAlignment="Right" Click="NewBranchBtn_Click" ToolTip="Create New Branch">
+                                                        <Border Width="22" Height="22" CornerRadius="11" Background="#1A1F2E" BorderBrush="#28FFFFFF" BorderThickness="1">
+                                                            <Path Data="M6,2 L6,10 M2,6 L10,6" Stroke="#CBD5E1" StrokeThickness="1.5" Width="10" Height="10" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                    </Button>
+                                                </Grid>
+
+                                                <ItemsControl x:Name="BranchesListControl">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type models:BranchItem}">
+                                                            <Button Tag="{Binding Name}" Click="BranchItem_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,0,0,3">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border x:Name="BrBd" CornerRadius="8" Padding="10,7" Background="Transparent">
+                                                                            <Grid>
+                                                                                <StackPanel Orientation="Horizontal">
+                                                                                    <Path Data="M6,3 L6,15 M18,9 C18,12.3 15.3,15 12,15 L6,15 M6,3 C4.9,3 4,3.9 4,5 C4,6.1 4.9,7 6,7 C7.1,7 8,6.1 8,5 Z M18,5 C16.9,5 16,5.9 16,7 C16,8.1 16.9,9 18,9 Z"
+                                                                                          Stroke="#94A3B8" StrokeThickness="1.6" Width="13" Height="13" Stretch="Uniform" Margin="0,0,9,0" />
+                                                                                    <TextBlock x:Name="BrTxt" Text="{Binding Name}" FontSize="12.5" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                                                                </StackPanel>
+                                                                                <Grid x:Name="ActiveDot" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" Width="13" Height="13">
+                                                                                    <Ellipse Stroke="#EF4444" StrokeThickness="1.5" />
+                                                                                    <Ellipse Width="5" Height="5" Fill="#EF4444" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                                                <Setter TargetName="BrTxt" Property="Foreground" Value="#FFFFFF" />
+                                                                                <Setter TargetName="BrTxt" Property="FontWeight" Value="SemiBold" />
+                                                                                <Setter TargetName="ActiveDot" Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter TargetName="BrBd" Property="Background" Value="#1A1F2E" />
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                            </Button>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                                <Button Style="{StaticResource GhostButtonStyle}" HorizontalContentAlignment="Left" Padding="10,8" Margin="0,2,0,0" Click="NewBranchBtn_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Path Data="M6,1 L6,11 M1,6 L11,6" Stroke="#94A3B8" StrokeThickness="1.6" Width="12" Height="12" Stretch="Uniform" Margin="0,0,9,0" />
+                                                        <TextBlock Text="New Branch" FontSize="12" Foreground="#94A3B8" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </Border>
+
+                                    <!-- Center Chat Stream + Composer -->
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="62" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="66" />
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Chat Top Header -->
+                                        <Border Grid.Row="0" BorderBrush="#16FFFFFF" BorderThickness="0,0,0,1" Padding="14,0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                    <Border Width="32" Height="32" CornerRadius="16" Background="#2B1218" BorderBrush="#55EF4444" BorderThickness="1" Margin="0,0,10,0">
+                                                        <Path Data="M4,4 L20,4 L20,16 L8,16 L4,20 Z" Stroke="#F87171" StrokeThickness="1.7" Width="14" Height="14" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock x:Name="ActiveChannelTitle" Text="General" FontSize="15" FontWeight="Bold" Foreground="#FFFFFF" TextTrimming="CharacterEllipsis" />
+                                                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                                                            <TextBlock x:Name="AllDevicesSubText" Text="All devices (0) • " FontSize="11" Foreground="#94A3B8" />
+                                                            <Ellipse x:Name="LiveDot" Width="6" Height="6" Fill="#F59E0B" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                                            <TextBlock x:Name="LiveStatusText" Text="Searching…" FontSize="11" FontWeight="SemiBold" Foreground="#F59E0B" TextTrimming="CharacterEllipsis" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <!-- Group vs Private 1-on-1 Chat Mode Switcher -->
+                                                    <Border Background="#121622" BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="14" Padding="3" Margin="0,0,10,0">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Button x:Name="ScopeGroupBtn" Click="ScopeGroupBtn_Click" Cursor="Hand" Margin="0,0,2,0">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <ContentPresenter />
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                                <Border x:Name="ScopeGroupBd" Background="#2B3247" CornerRadius="11" Padding="10,4">
+                                                                    <TextBlock x:Name="ScopeGroupText" Text="All Group" FontSize="11" FontWeight="SemiBold" Foreground="#FFFFFF" />
+                                                                </Border>
+                                                            </Button>
+                                                            <Button x:Name="ScopePrivateBtn" Click="ScopePrivateBtn_Click" Cursor="Hand">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <ContentPresenter />
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                                <Border x:Name="ScopePrivateBd" Background="Transparent" CornerRadius="11" Padding="10,4">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock x:Name="ScopePrivateText" Text="🔒 Private" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8" />
+                                                                        <Ellipse x:Name="PrivateUnreadDot" Width="6" Height="6" Fill="#EF4444" Visibility="Collapsed" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Border>
+
+                                                    <Button Click="SyncMeshBtn_Click" Cursor="Hand" Margin="0,0,8,0" ToolTip="Catch-Up Sync missed messages &amp; files across all online peers">
+                                                        <Button.Template>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="#181D2B" BorderBrush="#3322C55E" BorderThickness="1" CornerRadius="14" Padding="9,4">
+                                                                    <TextBlock Text="↻ Sync" FontSize="11" FontWeight="SemiBold" Foreground="#4ADE80" />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Button.Template>
+                                                    </Button>
+
+                                                    <Border Background="#181D2B" BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="14" Padding="10,4" Margin="0,0,8,0">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Path Data="M16,21 L16,19 C16,16.8 14.2,15 12,15 L5,15 C2.8,15 1,16.8 1,19 L1,21 M8.5,11 C10.7,11 12.5,9.2 12.5,7 C12.5,4.8 10.7,3 8.5,3 C6.3,3 4.5,4.8 4.5,7 C4.5,9.2 6.3,11 8.5,11 Z"
+                                                                  Stroke="#CBD5E1" StrokeThickness="1.6" Width="13" Height="13" Stretch="Uniform" Margin="0,0,5,0" />
+                                                            <TextBlock x:Name="PeerCountBadgeText" Text="0" FontSize="11.5" FontWeight="SemiBold" Foreground="#F1F5F9" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <Button Style="{StaticResource GhostButtonStyle}" Width="30" Height="30" Click="OpenDevicesSettings_Click" ToolTip="Connection Info">
+                                                        <Border Width="22" Height="22" CornerRadius="11" BorderBrush="#94A3B8" BorderThickness="1.5">
+                                                            <TextBlock Text="i" FontSize="11" FontWeight="Bold" Foreground="#CBD5E1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                    </Button>
+                                                    <Button Style="{StaticResource GhostButtonStyle}" Width="30" Height="30" Click="RefreshNow_Click" ToolTip="Sync &amp; Refresh Now">
+                                                        <TextBlock Text="⋮" FontSize="16" FontWeight="Bold" Foreground="#CBD5E1" />
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Inline Toast + Private 1-on-1 Mode Banner -->
+                                        <StackPanel Grid.Row="1">
+                                            <Border x:Name="PrivateScopeBanner" Visibility="Collapsed" Background="#271016" BorderBrush="#55EF4444" BorderThickness="0,0,0,1" Padding="16,6">
+                                                <Grid>
+                                                    <TextBlock x:Name="PrivateScopeBannerText" Text="🔒 Private 1-on-1 with Phone • Hidden from All Group &amp; other phones" FontSize="11.5" FontWeight="SemiBold" Foreground="#FCA5A5" VerticalAlignment="Center" />
+                                                    <Button Style="{StaticResource GhostButtonStyle}" HorizontalAlignment="Right" Padding="8,2" Click="ScopeGroupBtn_Click">
+                                                        <TextBlock Text="All Group" FontSize="11" FontWeight="Bold" Foreground="#F87171" />
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                            <Border x:Name="InlineToastBanner" Visibility="Collapsed" Background="#2B141A" BorderBrush="#66EF4444" BorderThickness="1" CornerRadius="8" Margin="16,8,16,0" Padding="12,6" Cursor="Hand" MouseLeftButtonUp="ToastBanner_Click">
+                                                <Grid>
+                                                    <TextBlock x:Name="InlineToastText" Text="" FontSize="12" Foreground="#FCA5A5" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                                    <Button Style="{StaticResource GhostButtonStyle}" Width="22" Height="22" HorizontalAlignment="Right" Click="DismissToast_Click">
+                                                        <TextBlock Text="✕" FontSize="11" Foreground="#FCA5A5" />
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <!-- Scrollable Chat Messages -->
+                                        <ScrollViewer x:Name="ChatScrollViewer" Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="18,10,18,10">
+                                            <StackPanel>
+                                                <!-- Today Divider -->
+                                                <Grid Margin="0,4,0,14">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Height="1" Background="#16FFFFFF" VerticalAlignment="Center" />
+                                                    <TextBlock Grid.Column="1" Text="Today" FontSize="11.5" Foreground="#94A3B8" Margin="14,0" />
+                                                    <Border Grid.Column="2" Height="1" Background="#16FFFFFF" VerticalAlignment="Center" />
+                                                </Grid>
+
+                                                <!-- Empty Stream Helper -->
+                                                <Border x:Name="EmptyChatPlaceholder" Visibility="Collapsed" Background="#141824" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="14" Padding="24" Margin="20,28" HorizontalAlignment="Center">
+                                                    <StackPanel HorizontalAlignment="Center">
+                                                        <TextBlock Text="Ready for Zero-Cloud Sync" FontSize="15" FontWeight="SemiBold" Foreground="#F8FAFC" HorizontalAlignment="Center" />
+                                                        <TextBlock Text="Send messages, paste code snippets, press Ctrl+V to send screenshots, or drag &amp; drop multi-GB files directly to your phone."
+                                                                   FontSize="12.5" Foreground="#94A3B8" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="420" Margin="0,6,0,0" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <ItemsControl x:Name="ChatMessagesControl">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type models:SyncMessageViewModel}">
+                                                            <Grid Margin="0,0,0,14">
+                                                                <!-- INCOMING PHONE BUBBLE -->
+                                                                <Grid Visibility="{Binding IsIncoming, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Left" MaxWidth="540">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <Border Width="32" Height="32" CornerRadius="16" Background="#1C2131" BorderBrush="#28FFFFFF" BorderThickness="1" VerticalAlignment="Top" Margin="0,2,10,0">
+                                                                        <Path Data="M7,2 L17,2 C18.1,2 19,2.9 19,4 L19,20 C19,21.1 18.1,22 17,22 L7,22 C5.9,22 5,21.1 5,20 L5,4 C5,2.9 5.9,2 7,2 Z"
+                                                                              Stroke="#CBD5E1" StrokeThickness="1.6" Width="13" Height="15" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+
+                                                                    <StackPanel Grid.Column="1">
+                                                                        <StackPanel Orientation="Horizontal" Margin="2,0,0,5">
+                                                                            <TextBlock Text="{Binding SenderDisplay}" FontSize="12" FontWeight="Bold" Foreground="#F1F5F9" />
+                                                                            <TextBlock Text="{Binding TimeDisplay}" FontSize="11" Foreground="#64748B" Margin="8,1,0,0" />
+                                                                        </StackPanel>
+
+                                                                        <Border Background="#181C28" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="4,14,14,14" Padding="14,11">
+                                                                            <StackPanel>
+                                                                                <!-- WhatsApp / Telegram Style Media Preview Card (Photos & Videos) -->
+                                                                                <Border Visibility="{Binding IsMediaFile, Converter={StaticResource BoolToVis}}"
+                                                                                        CornerRadius="11"
+                                                                                        BorderBrush="#26FFFFFF"
+                                                                                        BorderThickness="1"
+                                                                                        ClipToBounds="True"
+                                                                                        Margin="0"
+                                                                                        MaxWidth="340"
+                                                                                        Cursor="Hand"
+                                                                                        Tag="{Binding}"
+                                                                                        MouseLeftButtonUp="OpenMessageFile_Click">
+                                                                                    <Grid MinWidth="240" MinHeight="150" MaxHeight="225">
+                                                                                        <Grid.Background>
+                                                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                                                <GradientStop Color="#141928" Offset="0" />
+                                                                                                <GradientStop Color="#27121A" Offset="1" />
+                                                                                            </LinearGradientBrush>
+                                                                                        </Grid.Background>
+
+                                                                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.55">
+                                                                                            <Path Data="M4,6 L16,6 C17.1,6 18,6.9 18,8 L18,16 C18,17.1 17.1,18 16,18 L4,18 C2.9,18 2,17.1 2,16 L2,8 C2,6.9 2.9,6 4,6 Z M18,10 L23,7 L23,17 L18,14 Z"
+                                                                                                  Stroke="#94A3B8" StrokeThickness="1.5" Width="32" Height="32" Stretch="Uniform" HorizontalAlignment="Center" />
+                                                                                            <TextBlock Text="Loading media preview…" FontSize="11" Foreground="#94A3B8" Margin="0,8,0,0" HorizontalAlignment="Center">
+                                                                                                <TextBlock.Style>
+                                                                                                    <Style TargetType="TextBlock">
+                                                                                                        <Style.Triggers>
+                                                                                                            <DataTrigger Binding="{Binding HasThumbnail}" Value="True">
+                                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                            </DataTrigger>
+                                                                                                        </Style.Triggers>
+                                                                                                    </Style>
+                                                                                                </TextBlock.Style>
+                                                                                            </TextBlock>
+                                                                                        </StackPanel>
+
+                                                                                        <Image Source="{Binding Thumbnail}" Visibility="{Binding HasThumbnail, Converter={StaticResource BoolToVis}}" Stretch="UniformToFill" />
+
+                                                                                        <Border VerticalAlignment="Bottom" Height="52">
+                                                                                            <Border.Background>
+                                                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                                                                    <GradientStop Color="#00000000" Offset="0" />
+                                                                                                    <GradientStop Color="#CC07080D" Offset="1" />
+                                                                                                </LinearGradientBrush>
+                                                                                            </Border.Background>
+                                                                                        </Border>
+
+                                                                                        <Grid Visibility="{Binding IsVideoFile, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                            <Border Width="54" Height="54" CornerRadius="27" Background="#BB0B0D14" BorderBrush="#CCFFFFFF" BorderThickness="1.5">
+                                                                                                <Border.Effect>
+                                                                                                    <DropShadowEffect Color="#EF4444" BlurRadius="16" ShadowDepth="0" Opacity="0.45" />
+                                                                                                </Border.Effect>
+                                                                                                <Path Data="M8,5 L19,12 L8,19 Z" Fill="White" Width="19" Height="19" Stretch="Uniform" Margin="4,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                                            </Border>
+                                                                                        </Grid>
+
+                                                                                        <Border Visibility="{Binding IsVideoFile, Converter={StaticResource BoolToVis}}"
+                                                                                                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="9"
+                                                                                                Background="#C4090B11" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="8" Padding="8,3.5">
+                                                                                            <StackPanel Orientation="Horizontal">
+                                                                                                <Path Data="M3,7 L14,7 C14.6,7 15,7.4 15,8 L15,16 C15,16.6 14.6,17 14,17 L3,17 C2.4,17 2,16.6 2,16 L2,8 C2,7.4 2.4,7 3,7 Z M15,10 L21,7.5 L21,16.5 L15,14 Z"
+                                                                                                      Fill="#EF4444" Width="12" Height="10" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                                                                <TextBlock Text="{Binding MediaBadgeText}" FontSize="10.5" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                                                                                            </StackPanel>
+                                                                                        </Border>
+
+                                                                                        <Grid VerticalAlignment="Bottom" Margin="10,0,8,7">
+                                                                                            <Grid.ColumnDefinitions>
+                                                                                                <ColumnDefinition Width="*" />
+                                                                                                <ColumnDefinition Width="Auto" />
+                                                                                            </Grid.ColumnDefinitions>
+                                                                                            <StackPanel VerticalAlignment="Center">
+                                                                                                <TextBlock Text="{Binding FileName}" FontSize="11.5" FontWeight="SemiBold" Foreground="#F8FAFC" TextTrimming="CharacterEllipsis" />
+                                                                                                <StackPanel Orientation="Horizontal">
+                                                                                                    <TextBlock Text="{Binding FileSizeDisplay}" FontSize="10" Foreground="#CBD5E1" />
+                                                                                                    <TextBlock Text=" • " FontSize="10" Foreground="#64748B" />
+                                                                                                    <TextBlock Text="{Binding StorageBadgeText}" FontSize="10" Foreground="#4ADE80" />
+                                                                                                </StackPanel>
+                                                                                            </StackPanel>
+                                                                                            <Button Grid.Column="1" Tag="{Binding}" Click="SaveAndOpenExternalBtn_Click" Style="{StaticResource GhostButtonStyle}" Width="28" Height="28" ToolTip="Save to Downloads &amp; Open Externally">
+                                                                                                <Border Width="26" Height="26" CornerRadius="13" Background="#AA131724" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                                                                                    <Path Data="M12,5 L12,15 M12,15 L8,11 M12,15 L16,11 M5,19 L19,19" Stroke="#F8FAFC" StrokeThickness="1.7" Width="12" Height="12" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                                                </Border>
+                                                                                            </Button>
+                                                                                        </Grid>
+                                                                                    </Grid>
+                                                                                </Border>
+
+                                                                                <!-- File Row if Non-Media FILE -->
+                                                                                <Grid Visibility="{Binding IsNonMediaFile, Converter={StaticResource BoolToVis}}" Margin="0,0,0,4">
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="Auto" />
+                                                                                        <ColumnDefinition Width="*" />
+                                                                                        <ColumnDefinition Width="Auto" />
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <Border Width="34" Height="34" CornerRadius="8" Background="#22283A" Margin="0,0,10,0">
+                                                                                        <TextBlock Text="{Binding FileExtBadge}" FontSize="9" FontWeight="Bold" Foreground="#94A3B8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                                    </Border>
+                                                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                                        <TextBlock Text="{Binding FileName}" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" TextWrapping="Wrap" />
+                                                                                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                                                                            <TextBlock Text="{Binding FileSizeDisplay}" FontSize="11" Foreground="#94A3B8" />
+                                                                                            <TextBlock Text=" • " FontSize="11" Foreground="#64748B" />
+                                                                                            <TextBlock Text="{Binding StorageBadgeText}" FontSize="11" Foreground="#4ADE80" />
+                                                                                        </StackPanel>
+                                                                                    </StackPanel>
+                                                                                    <Button Grid.Column="2" Tag="{Binding}" Click="SaveAndOpenExternalBtn_Click" Cursor="Hand" Margin="14,0,0,0">
+                                                                                        <Button.Template>
+                                                                                            <ControlTemplate TargetType="Button">
+                                                                                                <Border Background="#DC2626" CornerRadius="8" Padding="12,5">
+                                                                                                    <TextBlock Text="Open" FontSize="11.5" FontWeight="SemiBold" Foreground="White" />
+                                                                                                </Border>
+                                                                                            </ControlTemplate>
+                                                                                        </Button.Template>
+                                                                                    </Button>
+                                                                                </Grid>
+
+                                                                                <!-- Text Body -->
+                                                                                <TextBlock Text="{Binding DisplayedText}"
+                                                                                           Visibility="{Binding IsFile, Converter={StaticResource BoolToVis}}"
+                                                                                           Height="0" />
+                                                                                <TextBlock Text="{Binding DisplayedText}"
+                                                                                           FontSize="13"
+                                                                                           LineHeight="19"
+                                                                                           Foreground="#E2E8F0"
+                                                                                           TextWrapping="Wrap">
+                                                                                    <TextBlock.Style>
+                                                                                        <Style TargetType="TextBlock">
+                                                                                            <Style.Triggers>
+                                                                                                <DataTrigger Binding="{Binding IsFile}" Value="True">
+                                                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                </DataTrigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </TextBlock.Style>
+                                                                                </TextBlock>
+
+                                                                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                                                                    <StackPanel.Style>
+                                                                                        <Style TargetType="StackPanel">
+                                                                                            <Style.Triggers>
+                                                                                                <DataTrigger Binding="{Binding IsFile}" Value="True">
+                                                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                </DataTrigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </StackPanel.Style>
+                                                                                    <TextBlock Text="{Binding ExpandButtonLabel}"
+                                                                                               Visibility="{Binding CanExpand, Converter={StaticResource BoolToVis}}"
+                                                                                               Tag="{Binding}"
+                                                                                               MouseLeftButtonUp="ToggleExpandMessage_Click"
+                                                                                               FontSize="12"
+                                                                                               FontWeight="SemiBold"
+                                                                                               Foreground="#F87171"
+                                                                                               Cursor="Hand"
+                                                                                               Margin="0,0,14,0" />
+                                                                                    <TextBlock Text="Copy"
+                                                                                               Tag="{Binding TextContent}"
+                                                                                               MouseLeftButtonUp="CopyMessageText_Click"
+                                                                                               FontSize="11"
+                                                                                               Foreground="#94A3B8"
+                                                                                               Cursor="Hand" />
+                                                                                </StackPanel>
+                                                                            </StackPanel>
+                                                                        </Border>
+                                                                    </StackPanel>
+                                                                </Grid>
+
+                                                                <!-- OUTGOING LAPTOP BUBBLE (SIGNATURE NEON RED GLOW) -->
+                                                                <StackPanel Visibility="{Binding IsOutgoing, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Right" MaxWidth="540">
+                                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,4,5">
+                                                                        <TextBlock Text="LAPTOP (You)" FontSize="11.5" FontWeight="SemiBold" Foreground="#CBD5E1" />
+                                                                        <TextBlock Text="{Binding TimeDisplay}" FontSize="11" Foreground="#94A3B8" Margin="8,0,6,0" />
+                                                                        <TextBlock Text="✓✓" FontSize="11" FontWeight="Bold" Foreground="#EF4444" />
+                                                                    </StackPanel>
+
+                                                                    <Border BorderBrush="#EF4444" BorderThickness="1.2" CornerRadius="14,4,14,14" Padding="14,11">
+                                                                        <Border.Background>
+                                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                                <GradientStop Color="#271016" Offset="0" />
+                                                                                <GradientStop Color="#190C11" Offset="1" />
+                                                                            </LinearGradientBrush>
+                                                                        </Border.Background>
+                                                                        <Border.Effect>
+                                                                            <DropShadowEffect Color="#EF4444" BlurRadius="18" ShadowDepth="0" Opacity="0.38" />
+                                                                        </Border.Effect>
+                                                                        <StackPanel>
+                                                                            <!-- WhatsApp / Telegram Style Media Preview Card (Photos & Videos) -->
+                                                                            <Border Visibility="{Binding IsMediaFile, Converter={StaticResource BoolToVis}}"
+                                                                                    CornerRadius="11"
+                                                                                    BorderBrush="#44EF4444"
+                                                                                    BorderThickness="1"
+                                                                                    ClipToBounds="True"
+                                                                                    Margin="0"
+                                                                                    MaxWidth="340"
+                                                                                    Cursor="Hand"
+                                                                                    Tag="{Binding}"
+                                                                                    MouseLeftButtonUp="OpenMessageFile_Click">
+                                                                                <Grid MinWidth="240" MinHeight="150" MaxHeight="225">
+                                                                                    <Grid.Background>
+                                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                                            <GradientStop Color="#1E0E14" Offset="0" />
+                                                                                            <GradientStop Color="#321119" Offset="1" />
+                                                                                        </LinearGradientBrush>
+                                                                                    </Grid.Background>
+
+                                                                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.6">
+                                                                                        <Path Data="M4,6 L16,6 C17.1,6 18,6.9 18,8 L18,16 C18,17.1 17.1,18 16,18 L4,18 C2.9,18 2,17.1 2,16 L2,8 C2,6.9 2.9,6 4,6 Z M18,10 L23,7 L23,17 L18,14 Z"
+                                                                                              Stroke="#FCA5A5" StrokeThickness="1.5" Width="32" Height="32" Stretch="Uniform" HorizontalAlignment="Center" />
+                                                                                        <TextBlock Text="Loading media preview…" FontSize="11" Foreground="#FCA5A5" Margin="0,8,0,0" HorizontalAlignment="Center">
+                                                                                            <TextBlock.Style>
+                                                                                                <Style TargetType="TextBlock">
+                                                                                                    <Style.Triggers>
+                                                                                                        <DataTrigger Binding="{Binding HasThumbnail}" Value="True">
+                                                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                        </DataTrigger>
+                                                                                                    </Style.Triggers>
+                                                                                                </Style>
+                                                                                            </TextBlock.Style>
+                                                                                        </TextBlock>
+                                                                                    </StackPanel>
+
+                                                                                    <Image Source="{Binding Thumbnail}" Visibility="{Binding HasThumbnail, Converter={StaticResource BoolToVis}}" Stretch="UniformToFill" />
+
+                                                                                    <Border VerticalAlignment="Bottom" Height="52">
+                                                                                        <Border.Background>
+                                                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                                                                <GradientStop Color="#00000000" Offset="0" />
+                                                                                                <GradientStop Color="#CC090609" Offset="1" />
+                                                                                            </LinearGradientBrush>
+                                                                                        </Border.Background>
+                                                                                    </Border>
+
+                                                                                    <Grid Visibility="{Binding IsVideoFile, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                        <Border Width="54" Height="54" CornerRadius="27" Background="#BB1A0B10" BorderBrush="#DDFFFFFF" BorderThickness="1.5">
+                                                                                            <Border.Effect>
+                                                                                                <DropShadowEffect Color="#EF4444" BlurRadius="16" ShadowDepth="0" Opacity="0.55" />
+                                                                                            </Border.Effect>
+                                                                                            <Path Data="M8,5 L19,12 L8,19 Z" Fill="White" Width="19" Height="19" Stretch="Uniform" Margin="4,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                                        </Border>
+                                                                                    </Grid>
+
+                                                                                    <Border Visibility="{Binding IsVideoFile, Converter={StaticResource BoolToVis}}"
+                                                                                            HorizontalAlignment="Left" VerticalAlignment="Top" Margin="9"
+                                                                                            Background="#C8120A0E" BorderBrush="#44EF4444" BorderThickness="1" CornerRadius="8" Padding="8,3.5">
+                                                                                        <StackPanel Orientation="Horizontal">
+                                                                                            <Path Data="M3,7 L14,7 C14.6,7 15,7.4 15,8 L15,16 C15,16.6 14.6,17 14,17 L3,17 C2.4,17 2,16.6 2,16 L2,8 C2,7.4 2.4,7 3,7 Z M15,10 L21,7.5 L21,16.5 L15,14 Z"
+                                                                                                  Fill="#EF4444" Width="12" Height="10" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                                                            <TextBlock Text="{Binding MediaBadgeText}" FontSize="10.5" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                                                                                        </StackPanel>
+                                                                                    </Border>
+
+                                                                                    <Grid VerticalAlignment="Bottom" Margin="10,0,8,7">
+                                                                                        <Grid.ColumnDefinitions>
+                                                                                            <ColumnDefinition Width="*" />
+                                                                                            <ColumnDefinition Width="Auto" />
+                                                                                        </Grid.ColumnDefinitions>
+                                                                                        <StackPanel VerticalAlignment="Center">
+                                                                                            <TextBlock Text="{Binding FileName}" FontSize="11.5" FontWeight="SemiBold" Foreground="#FFFFFF" TextTrimming="CharacterEllipsis" />
+                                                                                            <StackPanel Orientation="Horizontal">
+                                                                                                <TextBlock Text="{Binding FileSizeDisplay}" FontSize="10" Foreground="#FCA5A5" />
+                                                                                                <TextBlock Text=" • " FontSize="10" Foreground="#FCA5A5" />
+                                                                                                <TextBlock Text="{Binding StorageBadgeText}" FontSize="10" Foreground="#FDE047" />
+                                                                                            </StackPanel>
+                                                                                        </StackPanel>
+                                                                                        <Button Grid.Column="1" Tag="{Binding}" Click="SaveAndOpenExternalBtn_Click" Style="{StaticResource GhostButtonStyle}" Width="28" Height="28" ToolTip="Save to Downloads &amp; Open Externally">
+                                                                                            <Border Width="26" Height="26" CornerRadius="13" Background="#AA1F0E14" BorderBrush="#44EF4444" BorderThickness="1">
+                                                                                                <Path Data="M12,5 L12,15 M12,15 L8,11 M12,15 L16,11 M5,19 L19,19" Stroke="#FFFFFF" StrokeThickness="1.7" Width="12" Height="12" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                                            </Border>
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </Border>
+
+                                                                            <!-- File Row if Non-Media FILE -->
+                                                                            <Grid Visibility="{Binding IsNonMediaFile, Converter={StaticResource BoolToVis}}" Margin="0,0,0,4">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto" />
+                                                                                    <ColumnDefinition Width="*" />
+                                                                                    <ColumnDefinition Width="Auto" />
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <Border Width="34" Height="34" CornerRadius="8" Background="#3B151D" Margin="0,0,10,0">
+                                                                                    <TextBlock Text="{Binding FileExtBadge}" FontSize="9" FontWeight="Bold" Foreground="#FCA5A5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                                </Border>
+                                                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                                    <TextBlock Text="{Binding FileName}" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF" TextWrapping="Wrap" />
+                                                                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                                                                        <TextBlock Text="{Binding FileSizeDisplay}" FontSize="11" Foreground="#FCA5A5" />
+                                                                                        <TextBlock Text=" • " FontSize="11" Foreground="#FCA5A5" />
+                                                                                        <TextBlock Text="{Binding StorageBadgeText}" FontSize="11" Foreground="#FDE047" />
+                                                                                    </StackPanel>
+                                                                                </StackPanel>
+                                                                                <Button Grid.Column="2" Tag="{Binding}" Click="SaveAndOpenExternalBtn_Click" Cursor="Hand" Margin="14,0,0,0">
+                                                                                    <Button.Template>
+                                                                                        <ControlTemplate TargetType="Button">
+                                                                                            <Border Background="#DC2626" CornerRadius="8" Padding="12,5">
+                                                                                                <TextBlock Text="Open" FontSize="11.5" FontWeight="SemiBold" Foreground="White" />
+                                                                                            </Border>
+                                                                                        </ControlTemplate>
+                                                                                    </Button.Template>
+                                                                                </Button>
+                                                                            </Grid>
+
+                                                                            <TextBlock Text="{Binding DisplayedText}"
+                                                                                       FontSize="13"
+                                                                                       LineHeight="19"
+                                                                                       Foreground="#F8FAFC"
+                                                                                       TextWrapping="Wrap">
+                                                                                <TextBlock.Style>
+                                                                                    <Style TargetType="TextBlock">
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsFile}" Value="True">
+                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </TextBlock.Style>
+                                                                            </TextBlock>
+
+                                                                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                                                                <StackPanel.Style>
+                                                                                    <Style TargetType="StackPanel">
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsFile}" Value="True">
+                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </StackPanel.Style>
+                                                                                <TextBlock Text="{Binding ExpandButtonLabel}"
+                                                                                           Visibility="{Binding CanExpand, Converter={StaticResource BoolToVis}}"
+                                                                                           Tag="{Binding}"
+                                                                                           MouseLeftButtonUp="ToggleExpandMessage_Click"
+                                                                                           FontSize="12"
+                                                                                           FontWeight="SemiBold"
+                                                                                           Foreground="#F87171"
+                                                                                           Cursor="Hand"
+                                                                                           Margin="0,0,14,0" />
+                                                                                <TextBlock Text="Copy"
+                                                                                           Tag="{Binding TextContent}"
+                                                                                           MouseLeftButtonUp="CopyMessageText_Click"
+                                                                                           FontSize="11"
+                                                                                           Foreground="#FCA5A5"
+                                                                                           Cursor="Hand" />
+                                                                            </StackPanel>
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </ScrollViewer>
+
+                                        <!-- Pending Large Snippet / Attachment Chip -->
+                                        <Border x:Name="LargePasteBanner" Grid.Row="3" Visibility="Collapsed" Background="#2B141A" BorderBrush="#88EF4444" BorderThickness="1" CornerRadius="10" Margin="16,4,16,2" Padding="12,6">
+                                            <Grid>
+                                                <TextBlock x:Name="LargePasteLabel" Text="Large code snippet staged — press Enter or Send" FontSize="12" FontWeight="SemiBold" Foreground="#FCA5A5" VerticalAlignment="Center" />
+                                                <Button Style="{StaticResource GhostButtonStyle}" Width="22" Height="22" HorizontalAlignment="Right" Click="ClearLargePaste_Click">
+                                                    <TextBlock Text="✕" FontSize="11" Foreground="#FCA5A5" />
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Bottom Composer Bar -->
+                                        <Border Grid.Row="4" BorderBrush="#14FFFFFF" BorderThickness="0,1,0,0" Padding="14,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Left Pill: + | Attach | Image -->
+                                                <Border Background="#161A26" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="21" Padding="6,0" Height="42" Margin="0,0,10,0">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <Button Style="{StaticResource GhostButtonStyle}" Width="32" Height="32" Click="PasteClipboardQuick_Click" ToolTip="Send Clipboard Text or Copied Screenshot">
+                                                            <Path Data="M12,5 L12,19 M5,12 L19,12" Stroke="#CBD5E1" StrokeThickness="1.8" Width="14" Height="14" Stretch="Uniform" />
+                                                        </Button>
+                                                        <Button Style="{StaticResource GhostButtonStyle}" Width="32" Height="32" Click="SendFilesBtn_Click" ToolTip="Attach &amp; Stream Files">
+                                                            <Path Data="M21.4,11.1 L12.2,20.3 C10.1,22.4 6.6,22.4 4.5,20.3 C2.4,18.2 2.4,14.7 4.5,12.6 L13.7,3.4 C15.1,2 17.4,2 18.8,3.4 C20.2,4.8 20.2,7.1 18.8,8.5 L9.6,17.7 C8.9,18.4 7.7,18.4 7,17.7 C6.3,17 6.3,15.8 7,15.1 L15.5,6.6"
+                                                                  Stroke="#CBD5E1" StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
+                                                        </Button>
+                                                        <Button Style="{StaticResource GhostButtonStyle}" Width="32" Height="32" Click="SendPhotosBtn_Click" ToolTip="Send Photos / Images">
+                                                            <Path Data="M4,5 L20,5 C21.1,5 22,5.9 22,7 L22,17 C22,18.1 21.1,19 20,19 L4,19 C2.9,19 2,18.1 2,17 L2,7 C2,5.9 2.9,5 4,5 Z M8.5,10 C9.3,10 10,9.3 10,8.5 C10,7.7 9.3,7 8.5,7 C7.7,7 7,7.7 7,8.5 C7,9.3 7.7,10 8.5,10 Z M21,15 L16,10 L5,19"
+                                                                  Stroke="#CBD5E1" StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!-- Center Message Input Box -->
+                                                <Border Grid.Column="1" Background="#161A26" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="21" Height="42" Padding="16,0,10,0">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid VerticalAlignment="Center">
+                                                            <TextBlock x:Name="ComposerPlaceholder" Text="Type a message, paste code, or drop files..." FontSize="13" Foreground="#64748B" IsHitTestVisible="False" />
+                                                            <TextBox x:Name="ComposerTextBox"
+                                                                     Background="Transparent"
+                                                                     BorderThickness="0"
+                                                                     Foreground="#F8FAFC"
+                                                                     CaretBrush="#EF4444"
+                                                                     FontSize="13"
+                                                                     AcceptsReturn="False"
+                                                                     TextChanged="ComposerTextBox_TextChanged"
+                                                                     KeyDown="ComposerTextBox_KeyDown" />
+                                                        </Grid>
+                                                        <Button Grid.Column="1" Style="{StaticResource GhostButtonStyle}" Width="30" Height="30" Click="SendClipboardBtn_Click" ToolTip="Push Clipboard Immediately">
+                                                            <Path Data="M4,10 L4,14 M8,7 L8,17 M12,4 L12,20 M16,7 L16,17 M20,10 L20,14"
+                                                                  Stroke="#94A3B8" StrokeThickness="1.7" Width="15" Height="15" Stretch="Uniform" />
+                                                        </Button>
+                                                    </Grid>
+                                                </Border>
+
+                                                <!-- Right Red Send Circle Button -->
+                                                <Button Grid.Column="2" Width="42" Height="42" Margin="10,0,0,0" Cursor="Hand" Click="SendMessageBtn_Click" ToolTip="Send Message (Enter)">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="SendBd" Width="42" Height="42" CornerRadius="21" Background="#DC2626">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect Color="#EF4444" BlurRadius="14" ShadowDepth="0" Opacity="0.45" />
+                                                                </Border.Effect>
+                                                                <Path Data="M22,2 L11,13 M22,2 L15,22 L11,13 L2,9 Z"
+                                                                      Stroke="White" StrokeThickness="1.8" Width="17" Height="17" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,1,2,0" />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="SendBd" Property="Background" Value="#EF4444" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+
+                                <!-- 2) PHONE VAULT BROWSER VIEW -->
+                                <Grid x:Name="VaultBrowserView" Visibility="Collapsed" Margin="20,16">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0,0,0,14">
+                                        <StackPanel>
+                                            <TextBlock Text="Phone Private Vault" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" />
+                                            <TextBlock x:Name="VaultHeaderCountText" Text="Browse and download files directly from your Android SanDen Vault" FontSize="12" Foreground="#94A3B8" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Button Click="ToggleHiddenVault_Click" Cursor="Hand" Margin="0,0,8,0" ToolTip="Store received PC files in a hidden .Vault folder with SHA-256 deduplication">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <ContentPresenter />
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                                <Border x:Name="HiddenVaultToggleBd" Background="#181D2B" BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="10" Padding="12,8">
+                                                    <TextBlock x:Name="HiddenVaultToggleText" Text="🔒 Hidden Vault: Off" FontSize="11.5" FontWeight="SemiBold" Foreground="#CBD5E1" />
+                                                </Border>
+                                            </Button>
+                                            <Button Click="SendFilesBtn_Click" Cursor="Hand" Margin="0,0,8,0">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="#DC2626" CornerRadius="10" Padding="14,8">
+                                                            <TextBlock Text="+ Upload to Phone Vault" FontSize="12" FontWeight="SemiBold" Foreground="White" />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                            <Button Style="{StaticResource GhostButtonStyle}" Padding="10,8" Click="RefreshNow_Click">
+                                                <TextBlock Text="↻ Refresh" FontSize="12" Foreground="#CBD5E1" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl x:Name="FullVaultItemsControl">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type models:VaultFileItem}">
+                                                    <Border Background="#161A26" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="12" Padding="14,10" Margin="0,0,0,8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="46" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Border Width="42" Height="42" CornerRadius="9" Background="#22283A" ClipToBounds="True" HorizontalAlignment="Left" Cursor="Hand" Tag="{Binding}" MouseLeftButtonUp="VaultMediaItem_Click">
+                                                                <Grid>
+                                                                    <TextBlock Text="{Binding ShortBadge}" FontSize="9" FontWeight="Bold" Foreground="#F87171" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <Image Source="{Binding Thumbnail}" Visibility="{Binding HasThumbnail, Converter={StaticResource BoolToVis}}" Stretch="UniformToFill" />
+                                                                    <Border Visibility="{Binding IsVideo, Converter={StaticResource BoolToVis}}" Width="20" Height="20" CornerRadius="10" Background="#BB0B0D14" BorderBrush="#CCFFFFFF" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                        <Path Data="M8,5 L19,12 L8,19 Z" Fill="White" Width="8" Height="8" Stretch="Uniform" Margin="2,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                </Grid>
+                                                            </Border>
+                                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0">
+                                                                <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Text="{Binding SubtitleDisplay}" FontSize="11.5" Foreground="#94A3B8" Margin="0,2,0,0" />
+                                                            </StackPanel>
+                                                            <Button Grid.Column="2" Tag="{Binding}" Click="DownloadVaultFileBtn_Click" Cursor="Hand">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border Background="#2B141A" BorderBrush="#66EF4444" BorderThickness="1" CornerRadius="8" Padding="12,6">
+                                                                            <TextBlock Text="↓ Download &amp; Open" FontSize="11.5" FontWeight="SemiBold" Foreground="#F87171" />
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                            </Button>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+
+                                <!-- 3) LIVE TRANSFERS VIEW -->
+                                <Grid x:Name="TransfersView" Visibility="Collapsed" Margin="20,16">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="File Transfers" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" />
+                                    <Border Grid.Row="1" Background="#161A26" BorderBrush="#44EF4444" BorderThickness="1" CornerRadius="14" Padding="22" Margin="0,12,0,14" Cursor="Hand" MouseLeftButtonUp="SendFilesBorder_Click">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <TextBlock Text="Drag &amp; Drop Any Files Here (or Click to Select)" FontSize="14" FontWeight="SemiBold" Foreground="#F8FAFC" HorizontalAlignment="Center" />
+                                            <TextBlock Text="Streams multi-GB videos, archives, and photos directly into your Android SanDen Vault" FontSize="12" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl x:Name="TransfersListControl">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type models:TransferProgressItem}">
+                                                    <Border Background="#161A26" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="12" Padding="14,12" Margin="0,0,0,8">
+                                                        <StackPanel>
+                                                            <Grid>
+                                                                <TextBlock Text="{Binding FileName}" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Text="{Binding PercentText}" FontSize="12" FontWeight="Bold" Foreground="#EF4444" HorizontalAlignment="Right" />
+                                                            </Grid>
+                                                            <ProgressBar Value="{Binding Progress}" Minimum="0" Maximum="1" Height="6" Margin="0,8,0,6" Foreground="#EF4444" Background="#252B3D" BorderThickness="0" />
+                                                            <TextBlock Text="{Binding StatusText}" FontSize="11.5" Foreground="#94A3B8" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+
+                                <!-- 4) CLIPBOARD SYNC VIEW -->
+                                <Grid x:Name="ClipboardView" Visibility="Collapsed" Margin="20,16">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0,0,0,14">
+                                        <StackPanel>
+                                            <TextBlock Text="Clipboard Continuity" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" />
+                                            <TextBlock Text="Synced text snippets &amp; copied items across Phone and Windows PC" FontSize="12" Foreground="#94A3B8" />
+                                        </StackPanel>
+                                        <Button HorizontalAlignment="Right" VerticalAlignment="Center" Click="SendClipboardBtn_Click" Cursor="Hand">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="#DC2626" CornerRadius="10" Padding="14,8">
+                                                        <TextBlock Text="Push Current PC Clipboard" FontSize="12" FontWeight="SemiBold" Foreground="White" />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl x:Name="ClipboardListControl">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type models:SyncMessageViewModel}">
+                                                    <Border Background="#161A26" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="12" Padding="14,12" Margin="0,0,0,8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding SenderDisplay}" FontSize="11" FontWeight="Bold" Foreground="#F87171" />
+                                                                <TextBlock Text="{Binding DisplayedText}" FontSize="12.5" Foreground="#F1F5F9" TextWrapping="Wrap" Margin="0,4,0,0" />
+                                                            </StackPanel>
+                                                            <Button Grid.Column="1" Tag="{Binding TextContent}" Click="CopyClipboardItemBtn_Click" Style="{StaticResource GhostButtonStyle}" Padding="10,6" VerticalAlignment="Top">
+                                                                <TextBlock Text="Copy" FontSize="11.5" FontWeight="SemiBold" Foreground="#FCA5A5" />
+                                                            </Button>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+
+                                <!-- 5) DEVICES & CONNECTION SETTINGS VIEW -->
+                                <Grid x:Name="DevicesSettingsView" Visibility="Collapsed" Margin="22,18">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <StackPanel>
+                                            <TextBlock Text="Devices &amp; Network Mesh" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" />
+                                            <TextBlock Text="Auto-discovers SanDen Android devices on Wi-Fi/Hotspot (UDP 54322 + Subnet Probe) or USB ADB Bridge" FontSize="12" Foreground="#94A3B8" Margin="0,3,0,16" />
+
+                                            <!-- Manual IP + USB Bridge Card -->
+                                            <Border Background="#161A26" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,0,0,16">
+                                                <StackPanel>
+                                                    <TextBlock Text="Connect Manually or via USB Cable" FontSize="13.5" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,10" />
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Border Background="#0E111A" BorderBrush="#28FFFFFF" BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,10,0">
+                                                            <TextBox x:Name="ManualIpTextBox" Background="Transparent" BorderThickness="0" Foreground="#F8FAFC" CaretBrush="#EF4444" FontFamily="Consolas" FontSize="13" Text="" ToolTip="Enter phone IP:port e.g. 192.168.1.23:54321" />
+                                                        </Border>
+                                                        <Button Grid.Column="1" Click="ConnectManualIpBtn_Click" Cursor="Hand" Margin="0,0,8,0">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="#DC2626" CornerRadius="10" Padding="16,9">
+                                                                        <TextBlock Text="Connect Wi-Fi" FontSize="12" FontWeight="SemiBold" Foreground="White" />
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
+                                                        <Button Grid.Column="2" Click="ConnectUsbBridgeBtn_Click" Cursor="Hand">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="#1E2538" BorderBrush="#55EF4444" BorderThickness="1" CornerRadius="10" Padding="16,9">
+                                                                        <TextBlock Text="USB Bridge (ADB)" FontSize="12" FontWeight="SemiBold" Foreground="#FCA5A5" />
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <TextBlock Text="Discovered Devices" FontSize="13.5" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,10" />
+                                            <ItemsControl x:Name="DiscoveredPeersControl">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type models:PeerDevice}">
+                                                        <Border Background="#161A26" BorderBrush="#22FFFFFF" BorderThickness="1" CornerRadius="12" Padding="14,12" Margin="0,0,0,8">
+                                                            <Grid>
+                                                                <StackPanel>
+                                                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF" />
+                                                                    <TextBlock Text="{Binding EndpointDisplay}" FontFamily="Consolas" FontSize="12" Foreground="#94A3B8" Margin="0,2,0,0" />
+                                                                </StackPanel>
+                                                                <Button Tag="{Binding}" Click="SelectPeerDeviceBtn_Click" HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand">
+                                                                    <Button.Template>
+                                                                        <ControlTemplate TargetType="Button">
+                                                                            <Border Background="#0E3B26" BorderBrush="#3322C55E" BorderThickness="1" CornerRadius="10" Padding="12,5">
+                                                                                <TextBlock Text="{Binding ConnectionBadge}" FontSize="11.5" FontWeight="SemiBold" Foreground="#22C55E" />
+                                                                            </Border>
+                                                                        </ControlTemplate>
+                                                                    </Button.Template>
+                                                                </Button>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- ═══ RIGHT TELEMETRY & QUICK ACTIONS COLUMN ═══ -->
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="12" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="12" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- CARD 1: CONNECTED DEVICE -->
+                            <Border Grid.Row="0" Background="#D90F121B" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="16" Padding="15,14">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Ellipse x:Name="DeviceCardStatusDot" Width="8" Height="8" Fill="#22C55E" Margin="0,0,7,0" />
+                                            <TextBlock Text="Connected Device" FontSize="13.5" FontWeight="SemiBold" Foreground="#FFFFFF" />
+                                        </StackPanel>
+                                        <Button Style="{StaticResource GhostButtonStyle}" Width="26" Height="26" HorizontalAlignment="Right" Click="OpenDevicesSettings_Click" ToolTip="Manage Connection / USB Bridge">
+                                            <TextBlock Text="⋮" FontSize="15" FontWeight="Bold" Foreground="#94A3B8" />
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Miniature Phone Frame with Glowing Red Wallpaper -->
+                                        <Border Width="54" Height="100" CornerRadius="10" Background="#07080D" BorderBrush="#38FFFFFF" BorderThickness="1.5" Margin="0,0,14,0" ClipToBounds="True">
+                                            <Grid>
+                                                <Canvas ClipToBounds="True">
+                                                    <Ellipse Width="56" Height="56" Canvas.Left="6" Canvas.Top="28" Opacity="0.55">
+                                                        <Ellipse.Fill>
+                                                            <RadialGradientBrush>
+                                                                <GradientStop Color="#EF4444" Offset="0" />
+                                                                <GradientStop Color="#0007080D" Offset="1" />
+                                                            </RadialGradientBrush>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Path Data="M -5,82 C 18,48 34,74 58,28" Stroke="#EF4444" StrokeThickness="2" Opacity="0.85" />
+                                                    <Path Data="M -5,92 C 20,60 36,84 58,44" Stroke="#F87171" StrokeThickness="1" Opacity="0.5" />
+                                                </Canvas>
+                                                <Border Width="14" Height="3" CornerRadius="1.5" Background="#28FFFFFF" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,5,0,0" />
+                                            </Grid>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock x:Name="ConnectedPhoneNameText" Text="Scanning Wi-Fi…" FontSize="14.5" FontWeight="Bold" Foreground="#FFFFFF" TextTrimming="CharacterEllipsis" />
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,6,0,5">
+                                                <Path Data="M2,9 C7.5,4.2 16.5,4.2 22,9 M5.5,12.5 C9.2,9.3 14.8,9.3 18.5,12.5 M9,16 C10.8,14.5 13.2,14.5 15,16 M12,19 L12.01,19"
+                                                      Stroke="#94A3B8" StrokeThickness="1.7" Width="13" Height="13" Stretch="Uniform" Margin="0,0,7,0" VerticalAlignment="Center" />
+                                                <TextBlock x:Name="ConnectedPhoneIpText" Text="Auto-discovering : 54321" FontFamily="Consolas" FontSize="10.8" Foreground="#CBD5E1" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,9">
+                                                <Border Width="18" Height="10" CornerRadius="2" BorderBrush="#94A3B8" BorderThickness="1.2" Padding="1.5" VerticalAlignment="Center" Margin="0,0,7,0">
+                                                    <Border Background="#22C55E" HorizontalAlignment="Left" Width="10" CornerRadius="1" />
+                                                </Border>
+                                                <TextBlock x:Name="ConnectedPhoneBatteryText" Text="--%" FontSize="12" FontWeight="SemiBold" Foreground="#F1F5F9" />
+                                            </StackPanel>
+
+                                            <Border x:Name="ConnectedBadgePill" Background="#0D3B26" BorderBrush="#3322C55E" BorderThickness="1" CornerRadius="11" Padding="11,3.5" HorizontalAlignment="Left" Cursor="Hand" MouseLeftButtonUp="ConnectUsbOrProbe_Click">
+                                                <TextBlock x:Name="ConnectedBadgeLabel" Text="Searching…" FontSize="11" FontWeight="SemiBold" Foreground="#22C55E" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- CARD 2: QUICK ACTIONS (2x2 GRID) -->
+                            <Border Grid.Row="2" Background="#D90F121B" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="16" Padding="15,14">
+                                <StackPanel>
+                                    <TextBlock Text="Quick Actions" FontSize="13.5" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,10" />
+                                    <UniformGrid Columns="2" Rows="2">
+                                        <Button Click="SendClipboardBtn_Click" Cursor="Hand" Margin="0,0,5,5">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="QaBd" Background="#161A27" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="11" Padding="10,12">
+                                                        <StackPanel HorizontalAlignment="Center">
+                                                            <Path Data="M9,4 L15,4 L15,6 L9,6 Z M6,6 L18,6 C19.1,6 20,6.9 20,8 L20,20 C20,21.1 19.1,22 18,22 L6,22 C4.9,22 4,21.1 4,20 L4,8 C4,6.9 4.9,6 6,6 Z"
+                                                                  Stroke="#F1F5F9" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,7" />
+                                                            <TextBlock Text="Send Clipboard" FontSize="11.5" Foreground="#CBD5E1" HorizontalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="QaBd" Property="Background" Value="#22283B" />
+                                                            <Setter TargetName="QaBd" Property="BorderBrush" Value="#66EF4444" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+
+                                        <Button Click="SendFilesBtn_Click" Cursor="Hand" Margin="5,0,0,5">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="QaBd" Background="#161A27" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="11" Padding="10,12">
+                                                        <StackPanel HorizontalAlignment="Center">
+                                                            <Path Data="M22,2 L11,13 M22,2 L15,22 L11,13 L2,9 Z"
+                                                                  Stroke="#F1F5F9" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,7" />
+                                                            <TextBlock Text="Send Files" FontSize="11.5" Foreground="#CBD5E1" HorizontalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="QaBd" Property="Background" Value="#22283B" />
+                                                            <Setter TargetName="QaBd" Property="BorderBrush" Value="#66EF4444" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+
+                                        <Button Click="OpenPcSavedFolder_Click" Cursor="Hand" Margin="0,5,5,0">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="QaBd" Background="#161A27" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="11" Padding="10,12">
+                                                        <StackPanel HorizontalAlignment="Center">
+                                                            <Path Data="M3,6 C3,4.9 3.9,4 5,4 L10,4 L12,6 L19,6 C20.1,6 21,6.9 21,8 L21,18 C21,19.1 20.1,20 19,20 L5,20 C3.9,20 3,19.1 3,18 Z"
+                                                                  Stroke="#F1F5F9" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,7" />
+                                                            <TextBlock Text="Open Vault" FontSize="11.5" Foreground="#CBD5E1" HorizontalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="QaBd" Property="Background" Value="#22283B" />
+                                                            <Setter TargetName="QaBd" Property="BorderBrush" Value="#66EF4444" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+
+                                        <Button Click="BrowsePhoneQuick_Click" Cursor="Hand" Margin="5,5,0,0">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="QaBd" Background="#161A27" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="11" Padding="10,12">
+                                                        <StackPanel HorizontalAlignment="Center">
+                                                            <Path Data="M7,2 L17,2 C18.1,2 19,2.9 19,4 L19,20 C19,21.1 18.1,22 17,22 L7,22 C5.9,22 5,21.1 5,20 L5,4 C5,2.9 5.9,2 7,2 Z M11,19 L13,19"
+                                                                  Stroke="#F1F5F9" StrokeThickness="1.6" Width="17" Height="17" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,7" />
+                                                            <TextBlock Text="Browse Phone" FontSize="11.5" Foreground="#CBD5E1" HorizontalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="QaBd" Property="Background" Value="#22283B" />
+                                                            <Setter TargetName="QaBd" Property="BorderBrush" Value="#66EF4444" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </UniformGrid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- CARD 3: RECENT FILES -->
+                            <Border Grid.Row="4" Background="#D90F121B" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="16" Padding="15,14">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Margin="0,0,0,10" Cursor="Hand" MouseLeftButtonUp="OpenPhoneVaultTab_Click">
+                                        <TextBlock Text="Recent Files" FontSize="13.5" FontWeight="SemiBold" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                                        <Path Data="M9,6 L15,12 L9,18" Stroke="#94A3B8" StrokeThickness="1.8" Width="13" Height="13" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    </Grid>
+
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl x:Name="RecentFilesSidebarControl">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type models:VaultFileItem}">
+                                                    <Border Background="#151925" BorderBrush="#18FFFFFF" BorderThickness="1" CornerRadius="10" Padding="9,8" Margin="0,0,0,8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="42" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Border Width="38" Height="38" CornerRadius="7" ClipToBounds="True" HorizontalAlignment="Left" Cursor="Hand" Tag="{Binding}" MouseLeftButtonUp="VaultMediaItem_Click">
+                                                                <Border.Background>
+                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                        <GradientStop Color="#2B3A67" Offset="0" />
+                                                                        <GradientStop Color="#7C2D12" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </Border.Background>
+                                                                <Grid>
+                                                                    <TextBlock Text="{Binding ShortBadge}" FontSize="8.5" FontWeight="Bold" Foreground="#E2E8F0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <Image Source="{Binding Thumbnail}" Visibility="{Binding HasThumbnail, Converter={StaticResource BoolToVis}}" Stretch="UniformToFill" />
+                                                                    <Border Visibility="{Binding IsVideo, Converter={StaticResource BoolToVis}}" Width="18" Height="18" CornerRadius="9" Background="#CC0B0D14" BorderBrush="#CCFFFFFF" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                        <Path Data="M8,5 L19,12 L8,19 Z" Fill="White" Width="7" Height="7" Stretch="Uniform" Margin="1.5,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0">
+                                                                <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold" Foreground="#F8FAFC" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Text="{Binding SubtitleDisplay}" FontSize="10.5" Foreground="#94A3B8" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                                            </StackPanel>
+
+                                                            <Button Grid.Column="2" Tag="{Binding}" Click="DownloadVaultFileBtn_Click" Style="{StaticResource GhostButtonStyle}" Width="28" Height="28" ToolTip="Download &amp; Open">
+                                                                <Path Data="M12,4 L12,16 M12,16 L8,12 M12,16 L16,12 M5,20 L19,20"
+                                                                      Stroke="#EF4444" StrokeThickness="1.8" Width="14" Height="14" Stretch="Uniform" />
+                                                            </Button>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <!-- ═══ WHATSAPP / TELEGRAM IN-APP MEDIA LIGHTBOX & VIDEO PLAYER ═══ -->
+                <Grid x:Name="MediaLightboxOverlay" Grid.ColumnSpan="2" Visibility="Collapsed" Background="#EE05060B">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="58" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Top Bar -->
+                    <Border Grid.Row="0" Background="#B00B0E17" BorderBrush="#1FFFFFFF" BorderThickness="0,0,0,1" Padding="20,0">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Background="#2B141A" BorderBrush="#66EF4444" BorderThickness="1" CornerRadius="6" Padding="8,3" Margin="0,0,12,0">
+                                    <TextBlock x:Name="LightboxKindBadge" Text="VIDEO" FontSize="10.5" FontWeight="Bold" Foreground="#EF4444" />
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock x:Name="LightboxTitleText" Text="media_preview.mp4" FontSize="14" FontWeight="SemiBold" Foreground="#FFFFFF" MaxWidth="480" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock x:Name="LightboxMetaText" Text="1 of 1 • 10.4 MB" FontSize="11.5" Foreground="#94A3B8" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Button x:Name="LightboxCopyBtn" Style="{StaticResource GhostButtonStyle}" Padding="12,7" Margin="0,0,6,0" Click="LightboxCopy_Click">
+                                    <TextBlock Text="Copy Image" FontSize="12" Foreground="#E2E8F0" />
+                                </Button>
+                                <Button Style="{StaticResource GhostButtonStyle}" Padding="12,7" Margin="0,0,6,0" Click="LightboxSaveOpen_Click">
+                                    <TextBlock Text="↓ Save / External App" FontSize="12" Foreground="#FCA5A5" />
+                                </Button>
+                                <Button Style="{StaticResource GhostButtonStyle}" Width="36" Height="36" Click="LightboxClose_Click" ToolTip="Close Preview (Esc)">
+                                    <TextBlock Text="✕" FontSize="15" Foreground="#FFFFFF" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Center Media Stage -->
+                    <Grid Grid.Row="1" Margin="64,20,64,18">
+                        <Image x:Name="LightboxImage" Stretch="Uniform" Visibility="Collapsed" />
+
+                        <MediaElement x:Name="LightboxVideo"
+                                      LoadedBehavior="Manual"
+                                      UnloadedBehavior="Close"
+                                      ScrubbingEnabled="True"
+                                      Stretch="Uniform"
+                                      Visibility="Collapsed"
+                                      MediaOpened="LightboxVideo_MediaOpened"
+                                      MediaEnded="LightboxVideo_MediaEnded"
+                                      MouseLeftButtonUp="LightboxVideoSurface_Click" />
+
+                        <!-- Center Poster + Big Play Overlay when Video Paused/Loading -->
+                        <Grid x:Name="LightboxVideoOverlay" Visibility="Collapsed" IsHitTestVisible="True" Cursor="Hand" MouseLeftButtonUp="LightboxPlayPause_Click">
+                            <Image x:Name="LightboxPosterFallback" Stretch="Uniform" Opacity="0.88" />
+                            <Border Width="76" Height="76" CornerRadius="38" Background="#CC0C0E16" BorderBrush="#EEFFFFFF" BorderThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#EF4444" BlurRadius="22" ShadowDepth="0" Opacity="0.6" />
+                                </Border.Effect>
+                                <Path x:Name="LightboxBigPlayIcon" Data="M8,5 L19,12 L8,19 Z" Fill="White" Width="28" Height="28" Stretch="Uniform" Margin="5,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+
+                        <!-- Loading / Streaming Pill -->
+                        <Border x:Name="LightboxLoadingPill" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,22" Background="#DD0B0E17" BorderBrush="#66EF4444" BorderThickness="1" CornerRadius="14" Padding="16,8">
+                            <TextBlock x:Name="LightboxLoadingText" Text="Streaming from phone…" FontSize="12.5" FontWeight="SemiBold" Foreground="#FCA5A5" />
+                        </Border>
+
+                        <!-- Prev / Next Gallery Navigation -->
+                        <Button x:Name="LightboxPrevBtn" Style="{StaticResource GhostButtonStyle}" Width="44" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-52,0,0,0" Click="LightboxPrev_Click" ToolTip="Previous Media (Left Arrow)">
+                            <TextBlock Text="‹" FontSize="34" Foreground="#E2E8F0" />
+                        </Button>
+                        <Button x:Name="LightboxNextBtn" Style="{StaticResource GhostButtonStyle}" Width="44" Height="64" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,-52,0" Click="LightboxNext_Click" ToolTip="Next Media (Right Arrow)">
+                            <TextBlock Text="›" FontSize="34" Foreground="#E2E8F0" />
+                        </Button>
+                    </Grid>
+
+                    <!-- Bottom Video Playback Scrubber -->
+                    <Border x:Name="LightboxVideoBar" Grid.Row="2" Visibility="Collapsed" Background="#C00B0E17" BorderBrush="#1FFFFFFF" BorderThickness="0,1,0,0" Padding="24,12">
+                        <Grid MaxWidth="820">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Width="36" Height="36" Click="LightboxPlayPause_BtnClick" Cursor="Hand" Margin="0,0,12,0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="#DC2626" CornerRadius="18">
+                                            <TextBlock x:Name="PlayPauseGlyph" Text="▶" FontSize="13" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <TextBlock x:Name="LightboxTimeText" Grid.Column="1" Text="0:00 / 0:00" FontFamily="Consolas" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="0,0,14,0" />
+
+                            <Slider x:Name="LightboxSeekSlider"
+                                    Grid.Column="2"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    VerticalAlignment="Center"
+                                    Thumb.DragStarted="LightboxSeek_DragStarted"
+                                    Thumb.DragCompleted="LightboxSeek_DragCompleted"
+                                    ValueChanged="LightboxSeek_ValueChanged" />
+
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                                <TextBlock Text="🔊" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <Slider x:Name="LightboxVolumeSlider" Width="82" Minimum="0" Maximum="1" Value="0.85" VerticalAlignment="Center" ValueChanged="LightboxVolume_ValueChanged" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ═══ MODAL INPUT DIALOG OVERLAY (For New Project / New Branch) ═══ -->
+                <Grid x:Name="ModalPromptOverlay" Grid.ColumnSpan="2" Visibility="Collapsed" Background="#AA05060A">
+                    <Border Width="380" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#131724" BorderBrush="#55EF4444" BorderThickness="1" CornerRadius="16" Padding="22">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="28" Opacity="0.7" />
+                        </Border.Effect>
+                        <StackPanel>
+                            <TextBlock x:Name="ModalPromptTitle" Text="New Project Channel" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF" />
+                            <TextBlock x:Name="ModalPromptSubtitle" Text="Synced immediately across your Android phone and PC" FontSize="12" Foreground="#94A3B8" Margin="0,4,0,14" />
+                            <Border Background="#0B0E17" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10" Padding="12,9">
+                                <TextBox x:Name="ModalPromptInput" Background="Transparent" BorderThickness="0" Foreground="#FFFFFF" CaretBrush="#EF4444" FontSize="13.5" KeyDown="ModalPromptInput_KeyDown" />
+                            </Border>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                                <Button Style="{StaticResource GhostButtonStyle}" Padding="14,7" Margin="0,0,8,0" Click="ModalPromptCancel_Click">
+                                    <TextBlock Text="Cancel" FontSize="12.5" Foreground="#94A3B8" />
+                                </Button>
+                                <Button Click="ModalPromptConfirm_Click" Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="#DC2626" CornerRadius="9" Padding="16,7">
+                                                <TextBlock Text="Create" FontSize="12.5" FontWeight="SemiBold" Foreground="White" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

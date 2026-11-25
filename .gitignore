@@ -1,0 +1,47 @@
+# ---- Android / Gradle ----
+*.apk
+*.aar
+*.ap_
+*.aab
+*.dex
+*.class
+.gradle/
+build/
+app/build/
+.kotlin/
+captures/
+local.properties
+*.jks
+*.keystore
+proguard/
+*.log
+
+# ---- IntelliJ / Android Studio ----
+.idea/
+*.iml
+.cxx/
+.externalNativeBuild/
+
+# ---- Visual Studio / .NET / Windows ----
+.vs/
+bin/
+obj/
+Publish/
+*.user
+*.suo
+*.cache
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# ---- Local Mesh / Runtime Data ----
+hash_index.json
+mesh_store.json
+passkey.txt
+.Vault/
+
+# ---- OS Files ----
+.DS_Store
+Thumbs.db
+ehthumbs.db

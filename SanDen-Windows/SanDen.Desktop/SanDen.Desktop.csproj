@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>SanDen-Desktop</AssemblyName>
+    <RootNamespace>SanDen.Desktop</RootNamespace>
+    <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
+    <Version>2.0.0</Version>
+    <Authors>SanStudio</Authors>
+    <Company>SanStudio</Company>
+    <Copyright>Copyright © 2026 SanStudio</Copyright>
+    <Product>SanDen Continuity Hub</Product>
+    <Description>SanDen — Native Windows Continuity Hub &amp; Private Vault Companion</Description>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\favicon.ico" />
+  </ItemGroup>
+
+</Project>
